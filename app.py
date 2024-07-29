@@ -5,12 +5,19 @@ from reportlab.pdfgen import canvas
 import os
 
 # Ler o arquivo CSV
-df = pd.read_csv('produtos_eletronicos.csv')
+df = pd.read_csv('./data/produtos_eletronicos.csv')
 
 # Função para criar a pasta se não existir
 def criar_pasta(pasta):
     if not os.path.exists(pasta):
         os.makedirs(pasta)
+def garantir_pasta(pasta):
+    if not os.path.exists(pasta):
+        os.makedirs(pasta)
+
+# Criar a pasta 'visualizations' se não existir
+pasta_visualizations = './visualizations'
+garantir_pasta(pasta_visualizations)
 
 # Função para recomendar produtos
 def recomendar_produtos(produto_nome, avaliacao_minima, preco_maximo):
@@ -32,7 +39,7 @@ def recomendar_produtos(produto_nome, avaliacao_minima, preco_maximo):
     print(produtos_recomendados[['produto', 'marca', 'avaliacao', 'preco']])
     
     # Criar diretório para imagens
-    pasta_imagens = 'imagens_graficos'
+    pasta_imagens = 'imagens'
     criar_pasta(pasta_imagens)
     
     # Criar gráficos
@@ -60,6 +67,8 @@ def recomendar_produtos(produto_nome, avaliacao_minima, preco_maximo):
     # Salvar gráficos em arquivos na pasta
     caminho_aval = os.path.join(pasta_imagens, 'grafico_avaliacoes.png')
     #caminho_prec = os.path.join(pasta_imagens, 'grafico_precos.png')
+    # Função para garantir que a pasta exista
+
     
     # Remover arquivos existentes
     for caminho in [caminho_aval]:
@@ -77,14 +86,15 @@ def recomendar_produtos(produto_nome, avaliacao_minima, preco_maximo):
         return
     
     # Criar o PDF
-    pdf_filename = 'recomendacoes_produtos.pdf'
+    pdf_filename = './visualizations/recomendacoes_produtos.pdf'
     c = canvas.Canvas(pdf_filename, pagesize=letter)
     width, height = letter
     
     # Adicionar título
     margem_x = 72
     margem_y = height - 72
-    c.setFont("Helvetica", 12)
+    c.setFont("Helvetica", 14)
+
     c.drawString(margem_x, margem_y, f'Recomendações de Produtos para {produto_nome.upper()}')
 
     
